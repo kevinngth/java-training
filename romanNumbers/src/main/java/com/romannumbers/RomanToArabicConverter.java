@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class RomanToArabicConverter {
     private HashMap<String, Integer> conversionMap = new HashMap();
-    public RomanToArabicConverter() {
+    protected RomanToArabicConverter() {
         conversionMap.put( "C", 100 );
         conversionMap.put( "L", 50 );
         conversionMap.put( "X", 10 );

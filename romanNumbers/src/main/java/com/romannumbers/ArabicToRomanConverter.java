@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ArabicToRomanConverter {
 	private List <RomanArabicMap> list = new ArrayList<>();
-	public ArabicToRomanConverter() {
+	protected ArabicToRomanConverter() {
 		list.add(new RomanArabicMap(100,"C"));
 		list.add(new RomanArabicMap(90,"XC"));
 		list.add(new RomanArabicMap(50,"L"));
