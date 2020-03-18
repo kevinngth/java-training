@@ -17,7 +17,7 @@ public class ArabicToRomanConverter {
 		list.add(new RomanArabicMap(1,"I"));
 	}
 
-	String convert(int input ) {
+	protected String convert(int input ) {
 		String result = "";
 		Integer balance = input;
 		while ( balance > 0 ) {

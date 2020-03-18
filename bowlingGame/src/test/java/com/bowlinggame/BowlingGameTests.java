@@ -12,6 +12,4 @@ class BowlingGameTests {
 		BowlingGame bowlingGame = new BowlingGame();
 		assertThat( bowlingGame.getScore ).isEqualTo(  );
 	}
-
-
 }

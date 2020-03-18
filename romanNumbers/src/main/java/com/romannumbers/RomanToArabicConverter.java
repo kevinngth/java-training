@@ -1,8 +1,6 @@
 package com.romannumbers;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class RomanToArabicConverter {
     private HashMap<String, Integer> conversionMap = new HashMap();
@@ -14,11 +12,11 @@ public class RomanToArabicConverter {
         conversionMap.put( "I", 1 );
     }
 
-    Integer convert(String input) {
+    protected Integer convert(String input) {
         String[] arrayOfLetters = input.split("");
-        int[] arrayOfNumbers = new int[arrayOfLetters.length];
+        int[] arrayOfNumbers = new int[ arrayOfLetters.length ];
         for (int i = 0; i < arrayOfLetters.length; i++) {
-            arrayOfNumbers[arrayOfLetters.length -1 - i] = conversionMap.get(arrayOfLetters[i]);
+            arrayOfNumbers[ arrayOfLetters.length - 1 - i ] = conversionMap.get( arrayOfLetters[i] );
         }
         Integer result = 0;
         for ( int num : arrayOfNumbers ) {

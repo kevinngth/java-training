@@ -1,8 +1,6 @@
 package com.romannumbers;
 
 import static org.assertj.core.api.Assertions.*;
-
-import com.romannumbers.RomanToArabicConverter;
 import org.junit.jupiter.api.Test;
 
 public class RomanToArabicConverterTests {
