@@ -1,13 +1,12 @@
-package com.bowlinggame.B;
+package com.bowlinggame;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class BApplication {
+public class BowlingGame {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BApplication.class, args);
+		SpringApplication.run(BowlingGame.class, args);
 	}
 
 }
