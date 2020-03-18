@@ -3,13 +3,18 @@ package com.romannumbers;
 public class RomanNumberConverter {
 
 	String convert( int input ) {
-		if ( input == 1 ) {
-			return "I";
-		} else if ( input == 6 ) {
-			return "VI";
-		} else {
-			return "";
+		String result = "";
+		Integer balance = input;
+		while ( balance > 0 ) {
+			if ( balance > 5 ) {
+				balance -= 5;
+				result = "V" + result;
+			} else {
+				balance -= 1;
+				result += "I";
+			}
 		}
+		return result;
 	}
 }
 
