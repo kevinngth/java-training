@@ -5,6 +5,7 @@ public class Frame {
     private int secondRoll;
     private int specialRoll = 0;
     private Frame previousFrame;
+
     public Frame( int firstRoll, int secondRoll, Frame previousFrame ) {
         this.firstRoll = firstRoll;
         this.secondRoll = secondRoll;
@@ -18,19 +19,21 @@ public class Frame {
         this.previousFrame = previousFrame;
     }
 
-    public int getFirstRoll() {
-        return firstRoll;
+    public int calculateScore() {
+        int score = calculateBasicScore();
+        score += calculateBonuses();
+        score += calculateSpecialRollBonus();
+        return score;
     }
-
-    public int getTotal() {
+    private int calculateBasicScore() {
         return firstRoll + secondRoll;
     }
 
-    public boolean isSpare() {
-        return firstRoll != 10 && this.getTotal() == 10;
+    private boolean isSpare() {
+        return firstRoll != 10 && this.calculateBasicScore() == 10;
     }
 
-    public boolean isStrike() {
+    private boolean isStrike() {
         return this.firstRoll == 10;
     }
 
@@ -38,33 +41,22 @@ public class Frame {
         return previousFrame != null && previousFrame.isStrike();
     }
 
-    public int tenthFrameBonusScore() {
-        if ( isStrike() ) {
-            return this.specialRoll + 10;
-        }
-        return this.specialRoll;
+    private int calculateSpecialRollBonus() {
+        if ( specialRoll == 0 ) { return 0; }
+        return isStrike() ? this.specialRoll + 10 : this.specialRoll;
     }
 
-    public int getFrameScore() {
-        int score = 0;
-        if ( previousFrame == null ) {
-            score = getTotal();
+    private int calculateBonuses() {
+        if ( previousFrame == null ) { return 0; }
+        if ( previousFrame.isConsecutiveStrike() ) {
+            return 10 + this.firstRoll;
+        } else if ( previousFrame.isStrike() ) {
+            return calculateBasicScore();
+        } else if ( previousFrame.isSpare() ) {
+            return this.firstRoll;
         } else {
-            if (previousFrame.isStrike()) {
-                if ( previousFrame.isConsecutiveStrike() ) {
-                    score = getTotal() + getFirstRoll() + 10;
-                } else {
-                    score = getTotal() + getTotal();
-                }
-            } else if (previousFrame.isSpare()) {
-                score = getTotal() + getFirstRoll();
-            } else {
-                score = getTotal();
-            }
+            return 0;
         }
-        if ( specialRoll != 0 ) {
-            score += tenthFrameBonusScore();
-        }
-        return score;
+
     }
 }
