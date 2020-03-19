@@ -5,19 +5,24 @@ import java.util.List;
 
 public class BowlingGame {
 	List<Frame> frames = new ArrayList<Frame>();
+	private int score = 0;
 	public int getScore() {
-		int score = 0;
 		for (int i = 0; i < frames.size(); i++) {
-			Frame previousFrame = i > 0 ? frames.get( i - 1 ) : null;
 			Frame currentFrame = frames.get( i );
-			if ( i > 0 && previousFrame.isSpare() ) {
-				score += currentFrame.getFirstRoll();
-			} else if ( i > 0 && previousFrame.isStrike() ) {
-				score += currentFrame.getTotal();
-			} else if ( i == 9 ) {
-				score += currentFrame.tenthFrameBonusScore();
+			if ( currentFrame.isStrike() ) {
+				if ( frames.get( i + 1 ).getFirstRoll() == 10 ) {
+					currentFrame.setFrameScore( currentFrame.getTotal() + frames.get( i + 1 ).getFirstRoll() + frames.get( i + 2 ).getFirstRoll() );
+				} else {
+					currentFrame.setFrameScore( currentFrame.getTotal() + frames.get( i + 1 ).getTotal() );
+				}
+			} else if ( currentFrame.isSpare() ) {
+				currentFrame.setFrameScore( currentFrame.getTotal() + frames.get( i + 1 ).getFirstRoll() );
+			} else {
+				currentFrame.setFrameScore( currentFrame.getTotal() );
 			}
-			score += currentFrame.getTotal();
+		}
+		for ( Frame frame : frames ) {
+			score += frame.getFrameScore();
 		}
 		return score;
 	}

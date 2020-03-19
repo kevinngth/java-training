@@ -41,9 +41,9 @@ class BowlingGameTests {
 	}
 
 	@Test
-	void shouldGetExtraRoll() {
+	void shouldCalculateBonusFromTurkey() {
 		BowlingGame bowlingGame = new BowlingGame();
-		bowlingGame.roll( new Frame( 0, 0 ), new Frame( 2, 8 ), new Frame( 8, 0 ), new Frame( 10, 0 ), new Frame( 10, 0 ), new Frame( 10, 0 ), new Frame( 2, 8 ), new Frame( 5, 2 ), new Frame( 4, 2 )/*, new Frame( 2, 8, 2 ) */);
-		assertThat( bowlingGame.getScore() ).isEqualTo( 126 );
+		bowlingGame.roll( new Frame( 0, 0 ), new Frame( 2, 8 ), new Frame( 8, 0 ), new Frame( 10, 0 ), new Frame( 10, 0 ), new Frame( 10, 0 ), new Frame( 2, 8 ), new Frame( 5, 2 ) );
+		assertThat( bowlingGame.getScore() ).isEqualTo( 120 );
 	}
 }

@@ -4,6 +4,7 @@ public class Frame {
     private int firstRoll;
     private int secondRoll;
     private int specialRoll = 0;
+    private int frameScore = 0;
     public Frame( int firstRoll, int secondRoll ) {
         this.firstRoll = firstRoll;
         this.secondRoll = secondRoll;
@@ -37,6 +38,14 @@ public class Frame {
         } else {
             return false;
         }
+    }
+
+    public int getFrameScore() {
+        return frameScore;
+    }
+
+    public void setFrameScore(int frameScore) {
+        this.frameScore = frameScore;
     }
 
     public int tenthFrameBonusScore() {
