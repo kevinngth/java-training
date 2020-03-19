@@ -38,7 +38,7 @@ public class Frame {
     }
 
     private boolean isConsecutiveStrike() {
-        return previousFrame != null && previousFrame.isStrike();
+        return previousFrame != null && previousFrame.isStrike() && this.isStrike();
     }
 
     private int calculateSpecialRollBonus() {
@@ -48,9 +48,8 @@ public class Frame {
 
     private int calculateBonuses() {
         if ( previousFrame == null ) { return 0; }
-        if ( previousFrame.isConsecutiveStrike() ) {
-            return 10 + this.firstRoll;
-        } else if ( previousFrame.isStrike() ) {
+        if ( previousFrame.isConsecutiveStrike() ) { return 10 + this.firstRoll; }
+        if ( previousFrame.isStrike() ) {
             return calculateBasicScore();
         } else if ( previousFrame.isSpare() ) {
             return this.firstRoll;
