@@ -1,4 +1,78 @@
 package com.bowlinggame;
 
-public class LongFormatter {
+import java.util.List;
+
+public class LongFormatter extends Formatter {
+    private static final String STRIKE = "X";
+    private static final String NIL = "-";
+    private static final String SPARE = "/";
+    private static final String DOUBLE_SPACE = "  ";
+    private static final String SPACER = "        ";
+    private static final String END = "    |";
+    private static final String PLAYER_NAME = "Player 1";
+    private static final int NORMAL_WIDTH = 5;
+
+// HEADER SECTION
+
+    protected String getTemplate() {
+        return getHeader() + NEW_LINE + getBorder() + NEW_LINE;
+    }
+
+    private String getHeader() {
+        String header = "Name    ";
+        for (int i = 1; i <= LAST_FRAME + 1; i++) {
+            header += DIVIDER + DOUBLE_SPACE + i + DOUBLE_SPACE;
+        }
+        header = header + END;
+        return header;
+    };
+
+    private String getBorder() {
+        String border = "";
+        for (int i = 0; i < 94; i++ ) {
+            border += NIL;
+        }
+        return border;
+    }
+
+// FRAME SCORES SECTION
+
+    protected String getFrameScores( List<Frame> frames ) {
+        return PLAYER_NAME + DIVIDER + calculateFrameScores( frames ) + NEW_LINE;
+    }
+
+    private String calculateFrameScores( List<Frame> frames ) {
+        String frameScore = "";
+        for (Frame frame : frames) {
+            if ( frame.isStrike() ) {
+                frameScore += printFrame( STRIKE, NIL );
+            } else if ( frame.isSpare() ) {
+                frameScore += printFrame( toStringScore( frame.getFirstRoll() ), SPARE );
+            } else {
+                frameScore += printFrame( toStringScore( frame.getFirstRoll() ), toStringScore( frame.getSecondRoll() ) );
+            }
+        }
+        return frames.size() > LAST_FRAME ? frameScore + toStringScore( frames.get( LAST_FRAME ).getSpecialRoll() ) + DIVIDER : frameScore;
+    }
+
+    private String printFrame( String score1, String score2 ) {
+        return score1 + DIVIDER + score2 + DIVIDER;
+    }
+
+    private String toStringScore( int score ) {
+        return score == 0 ? NIL : String.valueOf(score);
+    }
+
+// ACCUMULATED SCORE SECTION
+
+    protected String getAccumulatedScores( List<Frame> frames ) {
+        String toPrint = SPACER + DIVIDER;
+        int accumulator = 0;
+        for (int i = 0; i < frames.size() ; i++) {
+            Frame currentFrame = frames.get( i );
+            accumulator += currentFrame.calculateScore();
+            toPrint += i == LAST_FRAME ? padScore( accumulator, LAST_FRAME ) : padScore( accumulator, NORMAL_WIDTH );
+        }
+        return toPrint;
+    }
 }
