@@ -9,7 +9,7 @@ public class FormatterTests {
         BowlingGame game = new BowlingGame();
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains( "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" );
+        assertThat( game.format() ).contains( "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " );
     }
 
     @Test
@@ -17,7 +17,7 @@ public class FormatterTests {
         BowlingGame game = new BowlingGame();
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains( "----------------------------------------------------------------------------------------------" );
+        assertThat( game.format() ).contains( "----------------------------------------------------------------------------------------------" );
     }
 
     @Test
@@ -25,8 +25,8 @@ public class FormatterTests {
         BowlingGame game = new BowlingGame();
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-            "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+            "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
             "----------------------------------------------------------------------------------------------"
         );
     }
@@ -38,8 +38,8 @@ public class FormatterTests {
         game.roll( f1 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-            "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+            "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
             "----------------------------------------------------------------------------------------------" + "\n" +
             "Player 1 | 5 | 2 |"
         );
@@ -52,8 +52,8 @@ public class FormatterTests {
         game.roll( f1 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
                 "----------------------------------------------------------------------------------------------" + "\n" +
                 "Player 1 | 5 | / |"
         );
@@ -66,8 +66,8 @@ public class FormatterTests {
         game.roll( f1 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
                         "----------------------------------------------------------------------------------------------" + "\n" +
                         "Player 1 | X | - |"
         );
@@ -88,8 +88,8 @@ public class FormatterTests {
         game.roll( f1, f2, f3, f4, f5, f6, f7, f8, f9 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
                 "----------------------------------------------------------------------------------------------" + "\n" +
                 "Player 1 | - | - | 2 | / | 8 | - | X | - | X | - | X | - | 2 | / | 5 | 2 | 4 | 2 |"
         );
@@ -111,8 +111,8 @@ public class FormatterTests {
         game.roll( f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
                 "----------------------------------------------------------------------------------------------" + "\n" +
                 "Player 1 | - | - | 2 | / | 8 | - | X | - | X | - | X | - | 2 | / | 5 | 2 | 4 | 2 | 2 | / | 2 |"
         );
@@ -134,8 +134,8 @@ public class FormatterTests {
         game.roll( f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 );
         Formatter format = new LongFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
-                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10      |" + "\n" +
+        assertThat( game.format() ).contains(
+                "Name     |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |    10     | " + "\n" +
                 "----------------------------------------------------------------------------------------------" + "\n" +
                 "Player 1 | - | - | 2 | 7 | 8 | - | 5 | - | 4 | - | 6 | - | 2 | 4 | 5 | 2 | 4 | 2 | 2 | 4 | - | " + "\n" +
                 "         |   0   |   9   |  17   |  22   |  26   |  32   |  38   |  45   |  51   |    57     |"
@@ -158,7 +158,7 @@ public class FormatterTests {
         game.roll( f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 );
         Formatter format = new ShortFormatter();
         game.setFormatter(format);
-        assertThat( game.display() ).contains(
+        assertThat( game.format() ).contains(
                 "Game   =" + "\n" +
                 "Frames = | 0,0 | 2,7 | 8,0 | 5,0 | 4,0 | 6,0 | 2,4 | 5,2 | 4,2 | 2,4,0 | " + "\n" +
                 "Scores = |  0  |  9  | 17  | 22  | 26  | 32  | 38  | 45  | 51  |  57   | "

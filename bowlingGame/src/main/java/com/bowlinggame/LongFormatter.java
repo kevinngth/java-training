@@ -1,18 +1,31 @@
 package com.bowlinggame;
 
-import java.util.List;
-
 public class LongFormatter extends Formatter {
-    private static final String STRIKE = "X";
     private static final String NIL = "-";
+    private static final String STRIKE = "X";
     private static final String SPARE = "/";
-    private static final String DOUBLE_SPACE = "  ";
-    private static final String END = "    |";
-    private static final String PLAYER_NAME = "Player 1";
+    private static final String framesTitle = "Player 1";
     private String header = "Name    ";
     private String scoreTitle = "        ";
     private int specialWidth = 9;
     private int normalWidth = 5;
+
+    @Override
+    protected String getHeader() {
+        String result = header + DIVIDER;
+        for (int i = 1; i <= LAST_FRAME + 1; i++) {
+            result += i == 10 ? padNumber( i, specialWidth) : padNumber( i, normalWidth );
+        }
+        return result + NEW_LINE + getBorder();
+    }
+
+    private String getBorder() {
+        String border = "";
+        for (int i = 0; i < 94; i++ ) {
+            border += NIL;
+        }
+        return border;
+    }
 
     @Override
     public String getScoreTitle() {
@@ -29,46 +42,25 @@ public class LongFormatter extends Formatter {
         return normalWidth;
     }
 
-    @Override
-    protected String getHeader() {
-        String header = "Name    ";
-        for (int i = 1; i <= LAST_FRAME + 1; i++) {
-            header += DIVIDER + DOUBLE_SPACE + i + DOUBLE_SPACE;
-        }
-        header = header + END;
-        return header + NEW_LINE + getBorder();
-    };
-
-    private String getBorder() {
-        String border = "";
-        for (int i = 0; i < 94; i++ ) {
-            border += NIL;
-        }
-        return border;
-    }
-
 // FRAME SCORES SECTION
 
-    protected String getFrameScores( List<Frame> frames ) {
-        return PLAYER_NAME + DIVIDER + calculateFrameScores( frames );
+    @Override
+    protected String getFramesTitle() {
+        return framesTitle;
     }
 
-    private String calculateFrameScores( List<Frame> frames ) {
-        String frameScore = "";
-        for (Frame frame : frames) {
-            if ( frame.isStrike() ) {
-                frameScore += printFrame( STRIKE, NIL );
-            } else if ( frame.isSpare() ) {
-                frameScore += printFrame( toStringScore( frame.getFirstRoll() ), SPARE );
-            } else {
-                frameScore += printFrame( toStringScore( frame.getFirstRoll() ), toStringScore( frame.getSecondRoll() ) );
-            }
+    @Override
+    protected String printFrame( Frame frame ) {
+        String result;
+        if ( frame.isStrike() ) {
+            result = STRIKE + DIVIDER + NIL;
+        } else if ( frame.isSpare() ) {
+            result = toStringScore( frame.getFirstRoll() ) + DIVIDER + SPARE;
+        } else {
+            result = toStringScore( frame.getFirstRoll() ) + DIVIDER + toStringScore( frame.getSecondRoll() );
         }
-        return frames.size() > LAST_FRAME ? frameScore + toStringScore( frames.get( LAST_FRAME ).getSpecialRoll() ) + DIVIDER : frameScore;
-    }
-
-    private String printFrame( String score1, String score2 ) {
-        return score1 + DIVIDER + score2 + DIVIDER;
+        result += frame.getSpecialRoll() == -1 ? "" : DIVIDER + toStringScore( frame.getSpecialRoll() );
+        return result + DIVIDER;
     }
 
     private String toStringScore( int score ) {

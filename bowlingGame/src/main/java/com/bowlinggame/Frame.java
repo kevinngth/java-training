@@ -3,7 +3,7 @@ package com.bowlinggame;
 public class Frame {
     private int firstRoll;
     private int secondRoll;
-    private int specialRoll = 0;
+    private int specialRoll = -1;
     private Frame previousFrame;
 
     public Frame( int firstRoll, int secondRoll, Frame previousFrame ) {
@@ -47,7 +47,7 @@ public class Frame {
         return previousFrame != null && previousFrame.isStrike() && this.isStrike();
     }
     private int calculateSpecialRollBonus() {
-        if ( specialRoll == 0 ) { return 0; }
+        if ( specialRoll == -1 ) { return 0; }
         return isStrike() ? this.specialRoll + 10 : this.specialRoll;
     }
     private int calculateBonuses() {

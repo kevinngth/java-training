@@ -25,7 +25,7 @@ public class BowlingGame {
 			frames.add( roll );
 		}
 	}
-	public String display() {
+	public String format() {
 		return formatter.toString( frames );
 	}
 }

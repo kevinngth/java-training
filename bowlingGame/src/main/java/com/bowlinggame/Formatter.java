@@ -21,7 +21,21 @@ public abstract class Formatter {
 
 // FRAME SCORES SECTION
 
-    protected abstract String getFrameScores( List<Frame> frames );
+    protected String getFrameScores( List<Frame> frames ) {
+        return getFramesTitle() + DIVIDER + calculateFrameScores( frames );
+    }
+
+    protected abstract String getFramesTitle();
+
+    protected final String calculateFrameScores( List<Frame> frames ) {
+        String result = "";
+        for (Frame frame : frames) {
+            result += printFrame( frame );
+        }
+        return result;
+    }
+
+    protected abstract String printFrame( Frame frame );
 
 // ACCUMULATED SCORE SECTION
 
@@ -37,13 +51,13 @@ public abstract class Formatter {
         for (int i = 0; i < frames.size() ; i++) {
             Frame currentFrame = frames.get( i );
             accumulator += currentFrame.calculateScore();
-            toPrint += i == LAST_FRAME ? padScore( accumulator, getSpecialWidth() ) : padScore( accumulator, getNormalWidth() );
+            toPrint += i == LAST_FRAME ? padNumber( accumulator, getSpecialWidth() ) : padNumber( accumulator, getNormalWidth() );
         }
         return toPrint;
     }
 
-    final String padScore( int score, int availableSpacing ) {
-        String result = String.valueOf( score );
+    final String padNumber(int num, int availableSpacing ) {
+        String result = String.valueOf( num );
         availableSpacing -= result.length();
         while ( availableSpacing > 0 ) {
             result = availableSpacing % 2 == 0 ? SPACE + result : result + SPACE;
