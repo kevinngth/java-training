@@ -10,7 +10,9 @@ public abstract class Formatter {
     static final int LAST_FRAME = 9;
 
     public String toString( List<Frame> frames ) {
-        String result = frames.isEmpty() ? getHeader() : getHeader() + NEW_LINE + getFrameScores( frames ) + NEW_LINE + getAccumulatedScores( frames );
+        String result = frames.isEmpty() ?
+            getHeader() :
+            getHeader() + NEW_LINE + getFrameScores( frames ) + NEW_LINE + getAccumulatedScores( frames );
         System.out.println( result );
         return result;
     }
@@ -50,8 +52,15 @@ public abstract class Formatter {
         int accumulator = 0;
         for (int i = 0; i < frames.size() ; i++) {
             Frame currentFrame = frames.get( i );
-            accumulator += currentFrame.calculateScore();
-            toPrint += i == LAST_FRAME ? padNumber( accumulator, getSpecialWidth() ) : padNumber( accumulator, getNormalWidth() );
+            if ( currentFrame.isSpare() && i + 1 < frames.size() ) {
+                accumulator += frames.get( i + 1 ).getFirstRoll();
+            } else if ( currentFrame.isStrike() && i + 1 < frames.size() ) {
+                accumulator += frames.get( i + 1 ).isStrike() ? frames.get( i + 1 ).getFirstRoll() + frames.get( i + 2 ).getFirstRoll() : frames.get( i + 1 ).getFirstRoll() + frames.get( i + 1 ).getSecondRoll();
+            }
+            accumulator += currentFrame.getFirstRoll() + currentFrame.getSecondRoll();
+            toPrint += i == LAST_FRAME ?
+                padNumber( accumulator, getSpecialWidth() ) :
+                padNumber( accumulator, getNormalWidth() );
         }
         return toPrint;
     }
@@ -67,3 +76,8 @@ public abstract class Formatter {
         return result;
     }
 }
+
+/*
+* private variables in child class, uppercase or camelcase?
+*
+* */

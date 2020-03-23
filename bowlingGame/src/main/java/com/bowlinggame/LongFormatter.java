@@ -5,8 +5,8 @@ public class LongFormatter extends Formatter {
     private static final String STRIKE = "X";
     private static final String SPARE = "/";
     private static final String framesTitle = "Player 1";
-    private String header = "Name    ";
-    private String scoreTitle = "        ";
+    private final String header = "Name    ";
+    private final String scoreTitle = "        ";
     private int specialWidth = 9;
     private int normalWidth = 5;
 
@@ -28,17 +28,17 @@ public class LongFormatter extends Formatter {
     }
 
     @Override
-    public String getScoreTitle() {
+    protected String getScoreTitle() {
         return scoreTitle;
     }
 
     @Override
-    public int getSpecialWidth() {
+    protected int getSpecialWidth() {
         return specialWidth;
     }
 
     @Override
-    public int getNormalWidth() {
+    protected int getNormalWidth() {
         return normalWidth;
     }
 

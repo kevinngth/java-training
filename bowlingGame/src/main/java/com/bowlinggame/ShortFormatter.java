@@ -9,17 +9,17 @@ public class ShortFormatter extends Formatter {
     private final int normalWidth = 3;
 
     @Override
-    public String getScoreTitle() {
+    protected String getScoreTitle() {
         return scoreTitle;
     }
 
     @Override
-    public int getSpecialWidth() {
+    protected int getSpecialWidth() {
         return specialWidth;
     }
 
     @Override
-    public int getNormalWidth() {
+    protected int getNormalWidth() {
         return normalWidth;
     }
 
