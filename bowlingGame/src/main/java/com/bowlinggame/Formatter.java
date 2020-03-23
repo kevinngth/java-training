@@ -10,24 +10,39 @@ public abstract class Formatter {
     static final int LAST_FRAME = 9;
 
     public String toString( List<Frame> frames ) {
-        String result = frames.isEmpty() ? getTemplate() : getTemplate() + getFrameScores( frames ) + getAccumulatedScores( frames );
+        String result = frames.isEmpty() ? getHeader() : getHeader() + NEW_LINE + getFrameScores( frames ) + NEW_LINE + getAccumulatedScores( frames );
         System.out.println( result );
         return result;
     }
 
 // HEADER SECTION
 
-    abstract String getTemplate();
+    protected abstract String getHeader();
 
 // FRAME SCORES SECTION
 
-    abstract String getFrameScores( List<Frame> frames );
+    protected abstract String getFrameScores( List<Frame> frames );
 
 // ACCUMULATED SCORE SECTION
 
-    abstract String getAccumulatedScores( List<Frame> frames );
+    protected abstract int getNormalWidth();
 
-    String padScore( int score, int availableSpacing ) {
+    protected abstract int getSpecialWidth();
+
+    protected abstract String getScoreTitle();
+
+    final String getAccumulatedScores( List<Frame> frames ) {
+        String toPrint = getScoreTitle() + DIVIDER;
+        int accumulator = 0;
+        for (int i = 0; i < frames.size() ; i++) {
+            Frame currentFrame = frames.get( i );
+            accumulator += currentFrame.calculateScore();
+            toPrint += i == LAST_FRAME ? padScore( accumulator, getSpecialWidth() ) : padScore( accumulator, getNormalWidth() );
+        }
+        return toPrint;
+    }
+
+    final String padScore( int score, int availableSpacing ) {
         String result = String.valueOf( score );
         availableSpacing -= result.length();
         while ( availableSpacing > 0 ) {

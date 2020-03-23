@@ -7,24 +7,36 @@ public class LongFormatter extends Formatter {
     private static final String NIL = "-";
     private static final String SPARE = "/";
     private static final String DOUBLE_SPACE = "  ";
-    private static final String SPACER = "        ";
     private static final String END = "    |";
     private static final String PLAYER_NAME = "Player 1";
-    private static final int NORMAL_WIDTH = 5;
+    private String header = "Name    ";
+    private String scoreTitle = "        ";
+    private int specialWidth = 9;
+    private int normalWidth = 5;
 
-// HEADER SECTION
-
-    protected String getTemplate() {
-        return getHeader() + NEW_LINE + getBorder() + NEW_LINE;
+    @Override
+    public String getScoreTitle() {
+        return scoreTitle;
     }
 
-    private String getHeader() {
+    @Override
+    public int getSpecialWidth() {
+        return specialWidth;
+    }
+
+    @Override
+    public int getNormalWidth() {
+        return normalWidth;
+    }
+
+    @Override
+    protected String getHeader() {
         String header = "Name    ";
         for (int i = 1; i <= LAST_FRAME + 1; i++) {
             header += DIVIDER + DOUBLE_SPACE + i + DOUBLE_SPACE;
         }
         header = header + END;
-        return header;
+        return header + NEW_LINE + getBorder();
     };
 
     private String getBorder() {
@@ -38,7 +50,7 @@ public class LongFormatter extends Formatter {
 // FRAME SCORES SECTION
 
     protected String getFrameScores( List<Frame> frames ) {
-        return PLAYER_NAME + DIVIDER + calculateFrameScores( frames ) + NEW_LINE;
+        return PLAYER_NAME + DIVIDER + calculateFrameScores( frames );
     }
 
     private String calculateFrameScores( List<Frame> frames ) {
@@ -61,18 +73,5 @@ public class LongFormatter extends Formatter {
 
     private String toStringScore( int score ) {
         return score == 0 ? NIL : String.valueOf(score);
-    }
-
-// ACCUMULATED SCORE SECTION
-
-    protected String getAccumulatedScores( List<Frame> frames ) {
-        String toPrint = SPACER + DIVIDER;
-        int accumulator = 0;
-        for (int i = 0; i < frames.size() ; i++) {
-            Frame currentFrame = frames.get( i );
-            accumulator += currentFrame.calculateScore();
-            toPrint += i == LAST_FRAME ? padScore( accumulator, LAST_FRAME ) : padScore( accumulator, NORMAL_WIDTH );
-        }
-        return toPrint;
     }
 }
