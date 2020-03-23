@@ -5,9 +5,14 @@ import java.util.List;
 
 public class BowlingGame {
 
-	List<Frame> frames = new ArrayList<Frame>();
+	public List<Frame> frames = new ArrayList<Frame>();
 
 	private int score = 0;
+	private Formatter formatter;
+
+	public void setFormatter(Formatter formatter) {
+		this.formatter = formatter;
+	}
 
 	public int getScore() {
 		for ( Frame frame : frames ) {
@@ -15,10 +20,12 @@ public class BowlingGame {
 		}
 		return score;
 	}
-
 	public void roll(Frame... rolls) {
 		for (Frame roll : rolls) {
 			frames.add( roll );
 		}
+	}
+	public String display() {
+		return formatter.toString( frames );
 	}
 }
