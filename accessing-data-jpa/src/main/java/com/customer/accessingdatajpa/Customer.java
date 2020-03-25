@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Customer {
+@MappedSuperclass
+public abstract class Customer {
 
     @OneToMany( cascade = CascadeType.ALL )
     @JoinColumn( name = "customer_id" )
