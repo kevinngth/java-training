@@ -22,35 +22,29 @@ public class Customer {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String username;
     private String email;
 
     protected Customer() {}
 
-    public Customer(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Customer(String username, String email) {
+        this.username = username;
         this.email = email;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d, firstName='%s', lastName='%s']",
-                id, firstName, lastName);
+                "Customer[id=%d, firstName='%s']",
+                id, username);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -61,12 +55,8 @@ public class Customer {
         return accounts;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setEmail(String email) {
