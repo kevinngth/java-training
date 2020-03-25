@@ -210,12 +210,27 @@ public class CustomerRepositoryTests {
     @Test
     void shouldGetCustomerAddress() {
         Customer c = new Customer("Aaron", "Ang", "aa@gmail.com");
-        Address a = new Address("street","city", 123456);
+        Address a = new Address("sesame street","city hall", 123456);
         c.setAddress( a );
         repo.create( c );
         flushAndClear();
         Customer c2 = repo.findBy("lastName","Ang").get( 0 );
-        assertThat( c2.getAddress() ).isEqualTo( a );
+        assertThat(c2.getAddress()).isEqualToComparingFieldByField(a);
+    }
 
+    @Test
+    void shouldUpdateCustomerAddress() {
+        Customer c = new Customer("Aaron", "Ang", "aa@gmail.com");
+        Address a = new Address("sesame street","city hall", 123456);
+        c.setAddress( a );
+        repo.create( c );
+        flushAndClear();
+        Customer c2 = repo.findBy("lastName","Ang").get( 0 );
+        Address a2 = new Address("Bourke Street", "Melbourne", 654321);
+        c2.setAddress(a2);
+        repo.update(c2);
+        flushAndClear();
+        Customer c3 = repo.findBy("lastName","Ang").get( 0 );
+        assertThat(c3.getAddress()).isEqualToComparingFieldByField(a2);
     }
 }

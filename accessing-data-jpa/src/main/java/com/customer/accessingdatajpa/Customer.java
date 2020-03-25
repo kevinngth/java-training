@@ -12,6 +12,11 @@ public class Customer {
     private List<Account> accounts = new ArrayList<>();
 
     @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "postalCode", column = @Column),
+            @AttributeOverride(name = "street", column = @Column),
+            @AttributeOverride(name = "city", column = @Column)
+    })
     private Address address;
 
     @Id

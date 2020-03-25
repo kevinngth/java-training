@@ -12,6 +12,8 @@ public class Address {
     @Column
     private int postalCode;
 
+    public Address() {}
+
     public Address(String street, String city, int postalCode) {
         this.street = street;
         this.city = city;
@@ -40,5 +42,14 @@ public class Address {
 
     public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", postalCode=" + postalCode +
+                '}';
     }
 }
