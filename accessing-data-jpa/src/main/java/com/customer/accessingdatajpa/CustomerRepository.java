@@ -15,44 +15,42 @@ public class CustomerRepository {
     @Autowired
     EntityManager em;
 
-
-    void create(String firstName, String lastName, String email) {
-        Customer c = new Customer(firstName, lastName, email);
+    void create(Customer c) {
         em.persist(c);
-        em.flush();
-        em.clear();
     }
 
-    List<Customer> all() {
+    public List<Customer> findAll() {
         Query query = em.createQuery("SELECT c FROM Customer c");
         List<Customer> result = query.getResultList();
-        em.flush();
-        em.clear();
         return result;
     }
 
-    List<Customer> findByLastName(String lastName) {
-        Query query = em.createQuery("FROM Customer WHERE lastName=:name");
-        query.setParameter("name", lastName);
+    public List<Customer> findBy(String attributeName, String attributeValue) {
+        String queryString = "FROM Customer WHERE " + attributeName + "= :attributeValue";
+        Query query = em.createQuery( queryString );
+        query.setParameter("attributeValue", attributeValue);
         return (List<Customer>) query.getResultList();
     }
 
 
-    public void update(Customer c2) {
-        Query query = em.createQuery("UPDATE Customer SET firstName = :fn, lastName = :ln, email = :email WHERE id = :id");
-        query.setParameter("id", c2.getId());
-        query.setParameter("fn", c2.getFirstName());
-        query.setParameter("ln", c2.getLastName());
-        query.setParameter("email", c2.getEmail());
-        query.executeUpdate();
-        em.flush();
-        em.clear();
+    public void update(Customer c) {
+        em.merge(c);
     }
 
     public void delete(Customer c) {
-        Query query = em.createQuery("DELETE FROM Customer c WHERE c.id = :id");
-        query.setParameter("id", c.getId()).executeUpdate();
-        em.flush();
-        em.clear();
+        em.remove( c );
+    }
+
+    public List<Customer> getRichCustomers(long threshold) {
+        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING SUM(a.balance) > :threshold ");
+        q.setParameter("threshold", threshold);
+        List<Customer> result = q.getResultList();
+        return result;
+    }
+
+    public List<Customer> sortByWealth() {
+        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id ORDER BY SUM(a.balance) DESC");
+        List<Customer> result = q.getResultList();
+        return result;
     }
 }

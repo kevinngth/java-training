@@ -1,12 +1,18 @@
 package com.customer.accessingdatajpa;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Customer {
+
+    @OneToMany( cascade = CascadeType.ALL )
+    @JoinColumn( name = "customer_id" )
+    private List<Account> accounts = new ArrayList<>();
+
+    @Embedded
+    private Address address;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -46,6 +52,10 @@ public class Customer {
         return email;
     }
 
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -56,5 +66,17 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void addAccount(Account account) {
+        this.accounts.add(account);
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
