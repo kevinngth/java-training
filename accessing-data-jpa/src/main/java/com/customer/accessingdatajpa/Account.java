@@ -11,6 +11,8 @@ public class Account {
     private String accountType;
     private int balance;
 
+    @Version
+    private long version;
     protected Account() {}
 
     public Account( String accountType, int balance) {
