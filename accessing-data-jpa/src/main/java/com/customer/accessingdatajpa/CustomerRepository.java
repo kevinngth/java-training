@@ -25,13 +25,12 @@ public class CustomerRepository {
         return result;
     }
 
-    public List<Customer> findBy(String attributeName, String attributeValue) {
+    public List<Customer> findBy(String attributeName, Object attributeValue) {
         String queryString = "FROM Customer WHERE " + attributeName + "= :attributeValue";
         Query query = em.createQuery( queryString );
         query.setParameter("attributeValue", attributeValue);
         return (List<Customer>) query.getResultList();
     }
-
 
     public void update(Customer c) {
         em.merge(c);

@@ -4,8 +4,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "Customer_Type")
 public abstract class Customer {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    private String username;
+    private String email;
 
     @OneToMany( cascade = CascadeType.ALL )
     @JoinColumn( name = "customer_id" )
@@ -19,12 +27,6 @@ public abstract class Customer {
     })
     private Address address;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
-    private String username;
-    private String email;
-
     protected Customer() {}
 
     public Customer(String username, String email) {
@@ -35,7 +37,7 @@ public abstract class Customer {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d, firstName='%s']",
+                "Customer[id=%d, username='%s']",
                 id, username);
     }
 

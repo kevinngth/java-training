@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,15 +25,15 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldFindCustomer() {
-        repo.create( new Customer( "Ang", "aa@gmail.com") );
+        repo.create( new Corporate( "Company", "company@gmail.com", 1234567890) );
         flushAndClear();
-        Customer c = repo.findBy("username","Ang").get( 0 );
-        assertThat( c.getUsername() ).isEqualTo( "Ang" );
+        Corporate c = (Corporate) repo.findBy("username","Company").get( 0 );
+        assertThat( c.getUen() ).isEqualTo( 1234567890 );
     }
 
     @Test
     void shouldUpdateCustomer() {
-        repo.create(new Customer( "Ang", "aa@gmail.com"));
+        repo.create(new Individual( "Ang", "aa@gmail.com", "S9876543A"));
         flushAndClear();
         Customer c = repo.findBy("username","Ang").get( 0 );
         assertThat( c.getEmail() ).isEqualTo( "aa@gmail.com" );
@@ -47,35 +46,36 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldGetAllCustomers() {
-		Customer c1 = new Customer("Ang", "aa@gmail.com");
-		Customer c2 = new Customer("Ong", "ao@gmail.com");
-		Customer c3 = new Customer("Tan", "at@gmail.com");
-		Customer c4 = new Customer("Lim", "al@gmail.com");
-		Customer c5 = new Customer("Lim", "bl@gmail.com");
-		Customer c6 = new Customer("Lim", "cl@gmail.com");
+		Customer c1 = new Individual("Ang", "aa@gmail.com", "S321A");
+		Customer c2 = new Individual("Ong", "ao@gmail.com", "S654B");
+		Customer c3 = new Individual("Tan", "at@gmail.com", "S987C");
+		Customer c4 = new Corporate("Apple", "apple@gmail.com", 123);
+		Customer c5 = new Corporate("Facebook", "facebook@gmail.com", 456);
+		Customer c6 = new Corporate("Netflix", "netflix@gmail.com", 789);
 		Customer[] cAll = {c1, c2, c3, c4, c5, c6};
 		for (Customer c : cAll) {
 			repo.create(c);
 		}
 		flushAndClear();
 		int result = repo.findAll().size();
-        assertThat( result ).isEqualTo( 6 );
+        assertThat( result ).isEqualTo(6);
+
     }
 
     @Test
     void shouldDeleteCustomer() {
-        Customer c1 = new Customer( "Ang", "aa@gmail.com");
+        Customer c1 = new Individual( "Ang", "aa@gmail.com", "S135A");
         c1.addAccount(new Account("Savings", 10100));
-        Customer c2 = new Customer( "Ong", "ao@gmail.com");
+        Customer c2 = new Individual( "Ong", "ao@gmail.com", "S246B");
         c2.addAccount(new Account("Savings", 100));
-        Customer c3 = new Customer( "Tan", "at@gmail.com");
+        Customer c3 = new Individual( "Tan", "at@gmail.com", "S369C");
         c3.addAccount(new Account("Savings", 22100));
-        Customer c4 = new Customer( "Lim", "al@gmail.com");
-        c4.addAccount(new Account("Savings", 35100));
-        Customer c5 = new Customer("Lim", "bl@gmail.com");
-        c5.addAccount(new Account("Savings", 1100));
-        Customer c6 = new Customer("Lim", "cl@gmail.com");
-        c6.addAccount(new Account("Savings", 2100));
+        Customer c4 = new Corporate("Apple", "apple@gmail.com", 123);
+        c4.addAccount(new Account("Current", 35100));
+        Customer c5 = new Corporate("Facebook", "facebook@gmail.com", 456);
+        c5.addAccount(new Account("Current", 1100));
+        Customer c6 = new Corporate("Netflix", "netflix@gmail.com", 789);
+        c6.addAccount(new Account("Current", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
             repo.create(c);
@@ -89,7 +89,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldAddNewAccount() {
-        Customer c = new Customer( "Ang", "aa@gmail.com");
+        Customer c = new Individual( "Ang", "aa@gmail.com", "S987D");
         c.addAccount(new Account("Savings", 100));
         repo.create(c);
         flushAndClear();
@@ -99,7 +99,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldDepositMoney() {
-        Customer c = new Customer( "Ang", "aa@gmail.com");
+        Customer c = new Individual( "Ang", "aa@gmail.com", "S654321E");
         c.addAccount(new Account("Savings", 100));
         repo.create(c);
         flushAndClear();
@@ -115,7 +115,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldWithdrawMoney() {
-        Customer c = new Customer( "Ang", "aa@gmail.com");
+        Customer c = new Corporate( "Apple", "aa@gmail.com", 98765);
         c.addAccount(new Account("Savings", 100));
         repo.create(c);
         flushAndClear();
@@ -131,17 +131,17 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldGetRichCustomersBasedOnAnyAccount() {
-        Customer c1 = new Customer( "Ang", "aa@gmail.com");
+        Customer c1 = new Individual( "Ang", "aa@gmail.com", "S1234A");
         c1.addAccount(new Account("Current", 6000));
-        Customer c2 = new Customer( "Ong", "ao@gmail.com");
+        Customer c2 = new Individual( "Ong", "ao@gmail.com","S2345B");
         c2.addAccount(new Account("Savings", 100));
-        Customer c3 = new Customer( "Tan", "at@gmail.com");
+        Customer c3 = new Individual( "Tan", "at@gmail.com","S3456C");
         c3.addAccount(new Account("Savings", 22100));
-        Customer c4 = new Customer( "Lim", "al@gmail.com");
-        c4.addAccount(new Account("Savings", 35100));
-        Customer c5 = new Customer("Lim", "bl@gmail.com");
-        c5.addAccount(new Account("Savings", 1100));
-        Customer c6 = new Customer("Lim", "cl@gmail.com");
+        Customer c4 = new Corporate( "Apple", "al@gmail.com", 1234347);
+        c4.addAccount(new Account("Current", 35100));
+        Customer c5 = new Corporate("Banana", "bl@gmail.com", 1231234);
+        c5.addAccount(new Account("Current", 1100));
+        Customer c6 = new Corporate("Carrot", "cl@gmail.com", 1247234);
         c3.addAccount(new Account("Current", 2200));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
@@ -153,19 +153,19 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldGetRichCustomersBasedOnTotalBalance() {
-        Customer c1 = new Customer( "Ang", "aa@gmail.com");
+        Customer c1 = new Individual( "Ang", "aa@gmail.com", "S12345A");
         c1.addAccount(new Account("Savings", 5100));
         c1.addAccount(new Account("Current", 6000));
-        Customer c2 = new Customer( "Ong", "ao@gmail.com");
+        Customer c2 = new Individual( "Ong", "ao@gmail.com","S34125B");
         c2.addAccount(new Account("Savings", 100));
-        Customer c3 = new Customer( "Tan", "at@gmail.com");
+        Customer c3 = new Individual( "Tan", "at@gmail.com","S51234C");
         c3.addAccount(new Account("Savings", 22100));
         c3.addAccount(new Account("Current", 100));
-        Customer c4 = new Customer( "Lim", "al@gmail.com");
+        Customer c4 = new Corporate( "Apple", "al@gmail.com", 13234546);
         c4.addAccount(new Account("Savings", 35100));
-        Customer c5 = new Customer("Lim", "bl@gmail.com");
+        Customer c5 = new Corporate("Blackberry", "bl@gmail.com",456789876);
         c5.addAccount(new Account("Savings", 1100));
-        Customer c6 = new Customer("Lim", "cl@gmail.com");
+        Customer c6 = new Corporate("Company", "cl@gmail.com",34544567);
         c3.addAccount(new Account("Current", 2200));
         c6.addAccount(new Account("Savings", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
@@ -178,19 +178,19 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldSortByCustomerWealth() {
-        Customer c1 = new Customer( "Ang", "aa@gmail.com");
+        Customer c1 = new Individual( "Ang", "aa@gmail.com", "13245hrewt4g");
         c1.addAccount(new Account("Savings", 5100));
         c1.addAccount(new Account("Current", 6000));
-        Customer c2 = new Customer( "Ong", "ao@gmail.com");
+        Customer c2 = new Individual( "Ong", "ao@gmail.com", "3145ga4ty");
         c2.addAccount(new Account("Savings", 100));
-        Customer c3 = new Customer( "Tan", "at@gmail.com");
+        Customer c3 = new Individual( "Tan", "at@gmail.com", "134f3t5yh");
         c3.addAccount(new Account("Savings", 22100));
         c3.addAccount(new Account("Current", 100));
-        Customer c4 = new Customer( "Lim", "al@gmail.com");
+        Customer c4 = new Corporate( "Lim", "al@gmail.com", 4767572);
         c4.addAccount(new Account("Savings", 35100));
-        Customer c5 = new Customer("Lim", "bl@gmail.com");
+        Customer c5 = new Corporate("Lim", "bl@gmail.com", 7725476);
         c5.addAccount(new Account("Savings", 1100));
-        Customer c6 = new Customer("Lim", "cl@gmail.com");
+        Customer c6 = new Corporate("Lim", "cl@gmail.com", 7254767);
         c3.addAccount(new Account("Current", 2200));
         c6.addAccount(new Account("Savings", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
@@ -209,7 +209,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldGetCustomerAddress() {
-        Customer c = new Customer( "Ang", "aa@gmail.com");
+        Customer c = new Individual( "Ang", "aa@gmail.com", "4g35y6");
         Address a = new Address("sesame street","city hall", 123456);
         c.setAddress( a );
         repo.create( c );
@@ -220,7 +220,7 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldUpdateCustomerAddress() {
-        Customer c = new Customer( "Ang", "aa@gmail.com");
+        Customer c = new Individual( "Ang", "aa@gmail.com", "12e3df45t");
         Address a = new Address("sesame street","city hall", 123456);
         c.setAddress( a );
         repo.create( c );
@@ -232,5 +232,23 @@ public class CustomerRepositoryTests {
         flushAndClear();
         Customer c3 = repo.findBy("username","Ang").get( 0 );
         assertThat(c3.getAddress()).isEqualToComparingFieldByField(a2);
+    }
+
+    @Test
+    void shouldFindCustomerByIdNumber() {
+        Customer c = new Individual("Apple", "apple@apple.com", "12345");
+        repo.create(c);
+        flushAndClear();
+        Individual i =  (Individual) repo.findBy("idNumber", "12345").get( 0 );
+        assertThat( i.getIdNumber() ).isEqualTo( "12345" );
+    }
+
+    @Test
+    void shouldFindCustomerByUEN() {
+        Customer c = new Corporate("Apple", "apple@apple.com", 12345);
+        repo.create(c);
+        flushAndClear();
+        Corporate i =  (Corporate) repo.findBy("uen", 12345).get( 0 );
+        assertThat( i.getUen() ).isEqualTo( 12345 );
     }
 }

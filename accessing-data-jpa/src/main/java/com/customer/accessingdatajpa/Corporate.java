@@ -1,10 +1,12 @@
 package com.customer.accessingdatajpa;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
+@DiscriminatorValue("Corporate")
 public class Corporate extends Customer {
 
+    @Column
     private int uen;
 
     public Corporate(String username, String email, int uen) {
