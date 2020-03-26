@@ -52,4 +52,11 @@ public class CustomerRepository {
         List<Customer> result = q.getResultList();
         return result;
     }
+
+    public List<Customer> getRichIndividual(long threshold) {
+        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING SUM(a.balance) > :threshold AND Customer_Type = Individual");
+        q.setParameter("threshold", threshold);
+        List<Customer> result = (List<Customer>) q.getResultList();
+        return result;
+    }
 }

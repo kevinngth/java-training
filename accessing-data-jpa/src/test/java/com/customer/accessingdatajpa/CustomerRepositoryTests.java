@@ -236,11 +236,11 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldFindCustomerByIdNumber() {
-        Customer c = new Individual("Apple", "apple@apple.com", "12345");
+        Customer c = new Individual("Apple", "apple@apple.com", "S12345C");
         repo.create(c);
         flushAndClear();
-        Individual i =  (Individual) repo.findBy("idNumber", "12345").get( 0 );
-        assertThat( i.getIdNumber() ).isEqualTo( "12345" );
+        Individual i =  (Individual) repo.findBy("idNumber", "S12345C").get( 0 );
+        assertThat( i.getIdNumber() ).isEqualTo( "S12345C" );
     }
 
     @Test
@@ -250,5 +250,30 @@ public class CustomerRepositoryTests {
         flushAndClear();
         Corporate i =  (Corporate) repo.findBy("uen", 12345).get( 0 );
         assertThat( i.getUen() ).isEqualTo( 12345 );
+    }
+
+    @Test
+    void shouldGetRichIndividual() {
+        Customer c1 = new Individual( "Ang", "aa@gmail.com", "S12345A");
+        c1.addAccount(new Account("Savings", 5100));
+        c1.addAccount(new Account("Current", 6000));
+        Customer c2 = new Individual( "Ong", "ao@gmail.com","S34125B");
+        c2.addAccount(new Account("Savings", 100));
+        Customer c3 = new Individual( "Tan", "at@gmail.com","S51234C");
+        c3.addAccount(new Account("Savings", 22100));
+        c3.addAccount(new Account("Current", 100));
+        Customer c4 = new Corporate( "Apple", "al@gmail.com", 13234546);
+        c4.addAccount(new Account("Savings", 35100));
+        Customer c5 = new Corporate("Blackberry", "bl@gmail.com",456789876);
+        c5.addAccount(new Account("Savings", 1100));
+        Customer c6 = new Corporate("Company", "cl@gmail.com",34544567);
+        c3.addAccount(new Account("Current", 2200));
+        c6.addAccount(new Account("Savings", 2100));
+        Customer[] cAll = {c1, c2, c3, c4, c5, c6};
+        for (Customer c : cAll) {
+            repo.create(c);
+        }
+        flushAndClear();
+        assertThat( repo.getRichIndividual( 20000 ) ).hasSize( 1 );
     }
 }
