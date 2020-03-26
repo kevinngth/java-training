@@ -1,62 +1,38 @@
 package com.customer.accessingdatajpa;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 @Transactional
-public class CustomerRepository {
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+//    Example
+//    @Query("from Auction a join a.category c where c.name=:categoryName")
+//    public Iterable<Auction> findByCategory(@Param("categoryName") String categoryName);
 
-    @Autowired
-    EntityManager em;
+    @Query("FROM Customer c WHERE c.email=:email")
+    List<Customer> findByEmail(@Param("email") String email);
 
-    void create(Customer c) {
-        em.persist(c);
-    }
+    @Query("FROM Customer c WHERE c.username=:username")
+    List<Customer> findByUsername(@Param("username") String username);
 
-    public List<Customer> findAll() {
-        Query query = em.createQuery("SELECT c FROM Customer c");
-        List<Customer> result = query.getResultList();
-        return result;
-    }
+    @Query("FROM Customer c WHERE c.uen=:uen")
+    List<Customer> findByUen(@Param("uen") int uen);
 
-    public List<Customer> findBy(String attributeName, Object attributeValue) {
-        String queryString = "FROM Customer WHERE " + attributeName + "= :attributeValue";
-        Query query = em.createQuery( queryString );
-        query.setParameter("attributeValue", attributeValue);
-        return (List<Customer>) query.getResultList();
-    }
+    @Query("FROM Customer c WHERE c.idNumber=:idNumber")
+    List<Customer> findByIdNumber(@Param("idNumber") String idNumber);
 
-    public void update(Customer c) {
-        em.merge(c);
-    }
+    @Query("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING SUM(a.balance) > :threshold ")
+    List<Customer> getRichCustomers(@Param("threshold") long threshold);
 
-    public void delete(Customer c) {
-        em.remove( c );
-    }
+    @Query("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id ORDER BY SUM(a.balance) DESC")
+    List<Customer> sortByWealth();
 
-    public List<Customer> getRichCustomers(long threshold) {
-        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING SUM(a.balance) > :threshold ");
-        q.setParameter("threshold", threshold);
-        List<Customer> result = q.getResultList();
-        return result;
-    }
-
-    public List<Customer> sortByWealth() {
-        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id ORDER BY SUM(a.balance) DESC");
-        List<Customer> result = q.getResultList();
-        return result;
-    }
-
-    public List<Customer> getRichIndividual(long threshold) {
-        Query q = em.createQuery("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING SUM(a.balance) > :threshold AND Customer_Type = Individual");
-        q.setParameter("threshold", threshold);
-        List<Customer> result = (List<Customer>) q.getResultList();
-        return result;
-    }
+    @Query("SELECT c FROM Customer c JOIN c.accounts a GROUP BY c.id HAVING (SUM(a.balance) > :threshold AND Customer_Type = :customerType)")
+    List<Customer> getRichByType(@Param("threshold") long threshold, @Param("customerType") String customerType);
 }

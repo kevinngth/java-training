@@ -25,22 +25,22 @@ public class CustomerRepositoryTests {
 
     @Test
     void shouldFindCustomer() {
-        repo.create( new Corporate( "Company", "company@gmail.com", 1234567890) );
+        repo.save( new Corporate( "Company", "company@gmail.com", 1234567890) );
         flushAndClear();
-        Corporate c = (Corporate) repo.findBy("username","Company").get( 0 );
+        Corporate c = (Corporate) repo.findByEmail("company@gmail.com").get( 0 );
         assertThat( c.getUen() ).isEqualTo( 1234567890 );
     }
 
     @Test
     void shouldUpdateCustomer() {
-        repo.create(new Individual( "Ang", "aa@gmail.com", "S9876543A"));
+        repo.save(new Individual( "Ang", "aa@gmail.com", "S9876543A"));
         flushAndClear();
-        Customer c = repo.findBy("username","Ang").get( 0 );
+        Customer c = repo.findByUsername("Ang").get( 0 );
         assertThat( c.getEmail() ).isEqualTo( "aa@gmail.com" );
         c.setEmail("aaron-ang@gmail.com");
-        repo.update(c);
+        repo.save(c);
         flushAndClear();
-        Customer c2 = repo.findBy("username","Ang").get( 0 );
+        Customer c2 = repo.findByUsername("Ang").get( 0 );
         assertThat( c2.getEmail() ).isEqualTo( "aaron-ang@gmail.com" );
     }
 
@@ -54,12 +54,11 @@ public class CustomerRepositoryTests {
 		Customer c6 = new Corporate("Netflix", "netflix@gmail.com", 789);
 		Customer[] cAll = {c1, c2, c3, c4, c5, c6};
 		for (Customer c : cAll) {
-			repo.create(c);
+			repo.save(c);
 		}
 		flushAndClear();
-		int result = repo.findAll().size();
-        assertThat( result ).isEqualTo(6);
-
+		List<Customer> result = (List<Customer>) repo.findAll();
+        assertThat( result.size() ).isEqualTo(6);
     }
 
     @Test
@@ -78,22 +77,23 @@ public class CustomerRepositoryTests {
         c6.addAccount(new Account("Current", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
-            repo.create(c);
+            repo.save(c);
         }
         flushAndClear();
-        Customer c7 = repo.findBy("username","Ong").get( 0 );
+        Customer c7 = repo.findByUsername("Ong").get( 0 );
         repo.delete(c7);
         flushAndClear();
-        assertThat( repo.findAll().size() ).isEqualTo( 5 );
+        List<Customer> result = (List<Customer>) repo.findAll();
+        assertThat( result.size() ).isEqualTo( 5 );
     }
 
     @Test
     void shouldAddNewAccount() {
         Customer c = new Individual( "Ang", "aa@gmail.com", "S987D");
         c.addAccount(new Account("Savings", 100));
-        repo.create(c);
+        repo.save(c);
         flushAndClear();
-        Customer c3 = repo.findBy("email","aa@gmail.com").get( 0 );
+        Customer c3 = repo.findByEmail("aa@gmail.com").get( 0 );
         assertThat(c3.getAccounts().size()).isGreaterThan( 0 );
     }
 
@@ -101,15 +101,15 @@ public class CustomerRepositoryTests {
     void shouldDepositMoney() {
         Customer c = new Individual( "Ang", "aa@gmail.com", "S654321E");
         c.addAccount(new Account("Savings", 100));
-        repo.create(c);
+        repo.save(c);
         flushAndClear();
-        Customer c2 = repo.findBy("email","aa@gmail.com").get( 0 );
+        Customer c2 = repo.findByEmail("aa@gmail.com").get( 0 );
         Account a2 = c2.getAccounts().get( 0 );
         assertThat(a2.getBalance()).isEqualTo( 100 );
         a2.deposit(200);
-        repo.update(c2);
+        repo.save(c2);
         flushAndClear();
-        Account a3 = repo.findBy("email","aa@gmail.com").get( 0 ).getAccounts().get( 0 );
+        Account a3 = repo.findByEmail("aa@gmail.com").get( 0 ).getAccounts().get( 0 );
         assertThat(a3.getBalance()).isEqualTo( 300 );
     }
 
@@ -117,15 +117,15 @@ public class CustomerRepositoryTests {
     void shouldWithdrawMoney() {
         Customer c = new Corporate( "Apple", "aa@gmail.com", 98765);
         c.addAccount(new Account("Savings", 100));
-        repo.create(c);
+        repo.save(c);
         flushAndClear();
-        Customer c2 = repo.findBy("email","aa@gmail.com").get( 0 );
+        Customer c2 = repo.findByEmail("aa@gmail.com").get( 0 );
         Account a2 = c2.getAccounts().get( 0 );
         assertThat(a2.getBalance()).isEqualTo( 100 );
         a2.withdraw(50);
-        repo.update(c2);
+        repo.save(c2);
         flushAndClear();
-        Account a3 = repo.findBy("email","aa@gmail.com").get( 0 ).getAccounts().get( 0 );
+        Account a3 = repo.findByEmail("aa@gmail.com").get( 0 ).getAccounts().get( 0 );
         assertThat(a3.getBalance()).isEqualTo( 50 );
     }
 
@@ -145,7 +145,7 @@ public class CustomerRepositoryTests {
         c3.addAccount(new Account("Current", 2200));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
-            repo.create(c);
+            repo.save(c);
         }
         flushAndClear();
         assertThat( repo.getRichCustomers( 10000 ) ).hasSize( 2 );
@@ -170,7 +170,7 @@ public class CustomerRepositoryTests {
         c6.addAccount(new Account("Savings", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
-            repo.create(c);
+            repo.save(c);
         }
         flushAndClear();
         assertThat( repo.getRichCustomers( 10000 ) ).hasSize( 3 );
@@ -195,7 +195,7 @@ public class CustomerRepositoryTests {
         c6.addAccount(new Account("Savings", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
-            repo.create(c);
+            repo.save(c);
         }
         flushAndClear();
         List<Customer> customers = repo.sortByWealth();
@@ -212,9 +212,9 @@ public class CustomerRepositoryTests {
         Customer c = new Individual( "Ang", "aa@gmail.com", "4g35y6");
         Address a = new Address("sesame street","city hall", 123456);
         c.setAddress( a );
-        repo.create( c );
+        repo.save( c );
         flushAndClear();
-        Customer c2 = repo.findBy("username","Ang").get( 0 );
+        Customer c2 = repo.findByUsername("Ang").get( 0 );
         assertThat(c2.getAddress()).isEqualToComparingFieldByField(a);
     }
 
@@ -223,37 +223,37 @@ public class CustomerRepositoryTests {
         Customer c = new Individual( "Ang", "aa@gmail.com", "12e3df45t");
         Address a = new Address("sesame street","city hall", 123456);
         c.setAddress( a );
-        repo.create( c );
+        repo.save( c );
         flushAndClear();
-        Customer c2 = repo.findBy("username","Ang").get( 0 );
+        Customer c2 = repo.findByUsername("Ang").get( 0 );
         Address a2 = new Address("Bourke Street", "Melbourne", 654321);
         c2.setAddress(a2);
-        repo.update(c2);
+        repo.save(c2);
         flushAndClear();
-        Customer c3 = repo.findBy("username","Ang").get( 0 );
+        Customer c3 = repo.findByUsername("Ang").get( 0 );
         assertThat(c3.getAddress()).isEqualToComparingFieldByField(a2);
     }
 
     @Test
     void shouldFindCustomerByIdNumber() {
         Customer c = new Individual("Apple", "apple@apple.com", "S12345C");
-        repo.create(c);
+        repo.save(c);
         flushAndClear();
-        Individual i =  (Individual) repo.findBy("idNumber", "S12345C").get( 0 );
+        Individual i =  (Individual) repo.findByIdNumber("S12345C").get( 0 );
         assertThat( i.getIdNumber() ).isEqualTo( "S12345C" );
     }
 
     @Test
     void shouldFindCustomerByUEN() {
         Customer c = new Corporate("Apple", "apple@apple.com", 12345);
-        repo.create(c);
+        repo.save(c);
         flushAndClear();
-        Corporate i =  (Corporate) repo.findBy("uen", 12345).get( 0 );
+        Corporate i =  (Corporate) repo.findByUen(12345).get( 0 );
         assertThat( i.getUen() ).isEqualTo( 12345 );
     }
 
     @Test
-    void shouldGetRichIndividual() {
+    void shouldGetRichCustomersByTheirType() {
         Customer c1 = new Individual( "Ang", "aa@gmail.com", "S12345A");
         c1.addAccount(new Account("Savings", 5100));
         c1.addAccount(new Account("Current", 6000));
@@ -267,13 +267,15 @@ public class CustomerRepositoryTests {
         Customer c5 = new Corporate("Blackberry", "bl@gmail.com",456789876);
         c5.addAccount(new Account("Savings", 1100));
         Customer c6 = new Corporate("Company", "cl@gmail.com",34544567);
-        c3.addAccount(new Account("Current", 2200));
+        c6.addAccount(new Account("Current", 2200));
         c6.addAccount(new Account("Savings", 2100));
         Customer[] cAll = {c1, c2, c3, c4, c5, c6};
         for (Customer c : cAll) {
-            repo.create(c);
+            repo.save(c);
         }
         flushAndClear();
-        assertThat( repo.getRichIndividual( 20000 ) ).hasSize( 1 );
+        assertThat( repo.getRichByType( 10000, "Individual" ) ).hasSize( 2 );
+        flushAndClear();
+        assertThat( repo.getRichByType( 4000, "Corporate" ) ).hasSize( 2 );
     }
 }
