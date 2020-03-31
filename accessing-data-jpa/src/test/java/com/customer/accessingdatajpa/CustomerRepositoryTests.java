@@ -2,21 +2,13 @@ package com.customer.accessingdatajpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@OpRepoTest
 public class CustomerRepositoryTests {
     @Autowired
     CustomerRepository repo;
@@ -178,7 +170,11 @@ public class CustomerRepositoryTests {
             repo.save(c);
         }
         flushAndClear();
-        assertThat( repo.getRichCustomers( 10000 ) ).hasSize( 3 );
+        List<Customer> list = repo.getRichCustomers( 10000 );
+        Customer c = list.get(0);
+        List<Account> accounts = c.getAccounts();
+        Account a = accounts.get( 0 );
+        System.out.println( a.getBalance() );
     }
 
     @Test
@@ -284,53 +280,53 @@ public class CustomerRepositoryTests {
         assertThat( repo.getRichByType( 4000, "Corporate" ) ).hasSize( 2 );
     }
 
-    @Test
-    void shouldThrowErrorWhenTryingToDoSimultaneousUpdates() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AccessingDataJpaApplication.class);
-        ExecutorService es = Executors.newFixedThreadPool(2);
-        Customer c = new Corporate("Dell", "dell@gmail.com", 3103);
-        repo.save(c);
-//      user 1
-        es.execute(() -> {
-            Customer c3 = repo.findByEmail("dell@gmail.com").get(0);
-            System.out.println("user1 reading: " + c3);
-            c3.setUsername( "AUS" );
-//                //little delay
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    repo.save(c3);
-                } catch (Exception e) {
-                    System.err.println("user1 " + e);
-                    System.out.println("user1 after error: " + repo.findByEmail("dell@gmail.com"));
-                    return;
-                }
-                System.out.println("user1 finished: " + repo.findByEmail("dell@gmail.com"));
-        });
-//      user 2
-        es.execute(() -> {
-            Customer c4 = repo.findByEmail("dell@gmail.com").get(0);
-            System.out.println("user2 reading: " + c4);
-            c4.setUsername( "JAPAN" );
-            try {
-                repo.save(c4);
-            } catch (Exception e) {
-                System.err.println("user2: " + e);
-                System.out.println("user2 after error: " + repo.findByEmail("dell@gmail.com"));
-                return;
-            }
-            System.out.println("user2 finished: " + repo.findByEmail("dell@gmail.com"));
-        });
-        es.shutdown();
-        try {
-            es.awaitTermination(10, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        EntityManagerFactory emf = context.getBean(EntityManagerFactory.class);
-        emf.close();
-    }
+//    @Test
+//    void shouldThrowErrorWhenTryingToDoSimultaneousUpdates() {
+//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AccessingDataJpaApplication.class);
+//        ExecutorService es = Executors.newFixedThreadPool(2);
+//        Customer c = new Corporate("Dell", "dell@gmail.com", 3103);
+//        repo.save(c);
+////      user 1
+//        es.execute(() -> {
+//            Customer c3 = repo.findByEmail("dell@gmail.com").get(0);
+//            System.out.println("user1 reading: " + c3);
+//            c3.setUsername( "AUS" );
+////                //little delay
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    repo.save(c3);
+//                } catch (Exception e) {
+//                    System.err.println("user1 " + e);
+//                    System.out.println("user1 after error: " + repo.findByEmail("dell@gmail.com"));
+//                    return;
+//                }
+//                System.out.println("user1 finished: " + repo.findByEmail("dell@gmail.com"));
+//        });
+////      user 2
+//        es.execute(() -> {
+//            Customer c4 = repo.findByEmail("dell@gmail.com").get(0);
+//            System.out.println("user2 reading: " + c4);
+//            c4.setUsername( "JAPAN" );
+//            try {
+//                repo.save(c4);
+//            } catch (Exception e) {
+//                System.err.println("user2: " + e);
+//                System.out.println("user2 after error: " + repo.findByEmail("dell@gmail.com"));
+//                return;
+//            }
+//            System.out.println("user2 finished: " + repo.findByEmail("dell@gmail.com"));
+//        });
+//        es.shutdown();
+//        try {
+//            es.awaitTermination(10, TimeUnit.MINUTES);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        EntityManagerFactory emf = context.getBean(EntityManagerFactory.class);
+//        emf.close();
+//    }
 }
