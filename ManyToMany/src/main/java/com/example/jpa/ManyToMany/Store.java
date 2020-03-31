@@ -2,6 +2,8 @@ package com.example.jpa.ManyToMany;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +15,8 @@ public class Store {
     private long id;
     private String name;
     private String address;
-    private LocalTime openingTime;
-    private LocalTime closingTime;
+    private OffsetTime openingTime;
+    private OffsetTime closingTime;
 
     @ManyToMany( cascade = CascadeType.ALL )
     @JoinTable(name = "stores_books", joinColumns = { @JoinColumn(name = "store_id") }, inverseJoinColumns = { @JoinColumn(name = "book_id") })
@@ -25,7 +27,7 @@ public class Store {
 
     protected Store() {}
 
-    public Store(String name, String address, LocalTime openingTime, LocalTime closingTime) {
+    public Store(String name, String address, OffsetTime openingTime, OffsetTime closingTime) {
         this.name = name;
         this.address = address;
         this.openingTime = openingTime;
@@ -72,19 +74,19 @@ public class Store {
         this.address = address;
     }
 
-    public LocalTime getOpeningTime() {
-        return openingTime;
+    public OffsetTime getOpeningTime(ZoneOffset offset) {
+        return openingTime.withOffsetSameInstant( offset );
     }
 
-    public void setOpeningTime(LocalTime openingTime) {
+    public void setOpeningTime(OffsetTime openingTime) {
         this.openingTime = openingTime;
     }
 
-    public LocalTime getClosingTime() {
-        return closingTime;
+    public OffsetTime getClosingTime(ZoneOffset offset) {
+        return closingTime.withOffsetSameInstant( offset );
     }
 
-    public void setClosingTime(LocalTime closingTime) {
+    public void setClosingTime(OffsetTime closingTime) {
         this.closingTime = closingTime;
     }
 }
