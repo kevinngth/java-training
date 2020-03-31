@@ -11,6 +11,10 @@ public class Account {
     private String accountType;
     private int balance;
 
+    @ManyToOne( cascade = CascadeType.ALL )
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Version
     private long version;
     protected Account() {}
@@ -55,5 +59,13 @@ public class Account {
 
     public void withdraw(int amount) {
         setBalance( getBalance() - amount );
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

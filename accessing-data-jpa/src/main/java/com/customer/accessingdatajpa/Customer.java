@@ -19,7 +19,6 @@ public abstract class Customer {
     private long version;
 
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinColumn( name = "customer_id" )
     private List<Account> accounts = new ArrayList<>();
 
     @Embedded

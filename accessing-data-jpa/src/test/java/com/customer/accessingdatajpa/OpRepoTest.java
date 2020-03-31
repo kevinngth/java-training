@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
 @Transactional
-@ActiveProfiles("dev")
+@ActiveProfiles("h2")
 public @interface OpRepoTest {
 }
