@@ -1,6 +1,7 @@
 package com.training.book_store.app.model;
 
 import javax.persistence.*;
+import java.lang.Double;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Book {
     private String title;
     private String author;
     private LocalDate datePublished;
+    private Double rrp;
 
     @ManyToMany( cascade = { CascadeType.ALL },
             mappedBy = "books")
@@ -24,10 +26,11 @@ public class Book {
 
     protected Book() {}
 
-    public Book(String title, String author, LocalDate datePublished) {
+    public Book(String title, String author, LocalDate datePublished, Double rrp) {
         this.title = title;
         this.author = author;
         this.datePublished = datePublished;
+        this.rrp = rrp;
     }
 
     @Override
@@ -36,7 +39,9 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", published=" + datePublished +
+                ", datePublished=" + datePublished +
+                ", rrp=" + rrp +
+                ", stores=" + stores +
                 ", version=" + version +
                 '}';
     }
@@ -75,5 +80,13 @@ public class Book {
 
     public void setDatePublished(LocalDate datePublished) {
         this.datePublished = datePublished;
+    }
+
+    public Double getRrp() {
+        return rrp;
+    }
+
+    public void setRrp(Double rrp) {
+        this.rrp = rrp;
     }
 }
