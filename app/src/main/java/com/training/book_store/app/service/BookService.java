@@ -42,7 +42,7 @@ public class BookService {
         double discount = 0.5;
         double noDiscount = 1;
         List<Book> books = getAllBooks();
-        return discountedBooks(books, isHappyHour() ? discount : noDiscount );
+        return discountedBooks(books, isWednesday() ? discount : noDiscount );
     }
 
     public HashMap<Book, Double> haveHappyHourSale() {
@@ -50,6 +50,10 @@ public class BookService {
         double noDiscount = 1;
         List<Book> books = getAllBooks();
         return discountedBooks(books, isHappyHour() ? discount : noDiscount );
+    }
+
+    private boolean isWednesday() {
+        return LocalDate.now().getDayOfWeek().toString().equals( "WEDNESDAY" );
     }
 
     private boolean isHappyHour() {

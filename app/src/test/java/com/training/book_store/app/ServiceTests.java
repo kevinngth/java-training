@@ -31,7 +31,7 @@ public class ServiceTests {
     @BeforeEach
     void setup() {
         bookService.addNewBook("Harry Potter", "J. K. Rowling", "2015-02-20", 11.0);
-        bookService.addNewBook("Lord of the Ring", "J. R. R. Tolkien", "2012-11-15", 22.0);
+        bookService.addNewBook("Lord of the Rings", "J. R. R. Tolkien", "2012-11-15", 22.0);
         flushAndClear();
     }
 
@@ -78,7 +78,7 @@ public class ServiceTests {
     @Test
     void shouldGetWeeklyWednesdayPrices() {
         HashMap<Book, Double> saleBooks = bookService.haveWeeklyWednesdaySale();
-        Book b = bookService.searchTitle("Lord of the Ring").get( 0 );
+        Book b = bookService.searchTitle("Lord of the Rings").get( 0 );
         assertThat( saleBooks.get( b ) ).isEqualTo( 11 );
     }
 }
