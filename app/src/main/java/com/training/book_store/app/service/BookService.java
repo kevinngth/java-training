@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -27,12 +28,25 @@ public class BookService {
         return bookRepo.findByTitle(title);
     }
 
-    public List<Book> getHappyHourBooks() {
+    public List<Book> getAllBooks() {
+        List<Book> books = (List<Book>) bookRepo.findAll();
+        return books;
+    }
+
+    public List<Book> applyDiscount(List<Book> books) {
         double DISCOUNT = 0.9;
-        List<Book> bookList = (List<Book>) bookRepo.findAll();
-        for (Book book : bookList) {
+        for (Book book : books) {
             book.setRrp(book.getRrp() * DISCOUNT);
         }
-        return bookList;
+        return books;
+    }
+
+    private boolean isHappyHour() {
+        return LocalDateTime.now().getHour() % 2 == 0 ? true : false;
+    }
+
+    public List<Book> happyHourBooks() {
+        List<Book> books = getAllBooks();
+        return isHappyHour() ? applyDiscount(books) : books;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,19 +30,27 @@ public class ServiceTests {
     @BeforeEach
     void setup() {
         bookService.addNewBook("Harry Potter", "J. K. Rowling", "2015-02-20", 11.0);
+        bookService.addNewBook("Lord of the Ring", "J. R. R. Tolkien", "2012-11-15", 22.0);
+        flushAndClear();
     }
 
     @Test
     void shouldAddNewBook() {
-        flushAndClear();
         List<Book> listOfBooks = bookService.searchTitle("Harry Potter");
         assertThat( listOfBooks.get( 0 ).getAuthor() ).isEqualTo("J. K. Rowling");
     }
 
     @Test
-    void shouldShowBooksOnDiscount() {
-        List<Book> happyHourBooks = bookService.getHappyHourBooks();
+    void shouldShowBooksWithDiscount() {
+        List<Book> happyHourBooks = bookService.applyDiscount( bookService.getAllBooks() );
         Book book = happyHourBooks.get( 0 );
         assertThat( book.getRrp() ).isEqualTo( 9.9 );
+    }
+
+    @Test
+    void shouldGetDiscountsBasedOnHappyHour() {
+        List<Book> allBooks = bookService.happyHourBooks();
+        Book book = allBooks.get( 0 );
+        assertThat( book.getRrp() ).isEqualTo( LocalDateTime.now().getHour() % 2 == 0 ? 9.9 : 11.0 );
     }
 }
