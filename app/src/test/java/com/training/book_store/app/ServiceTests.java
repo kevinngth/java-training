@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,18 +40,45 @@ public class ServiceTests {
         List<Book> listOfBooks = bookService.searchTitle("Harry Potter");
         assertThat( listOfBooks.get( 0 ).getAuthor() ).isEqualTo("J. K. Rowling");
     }
+//
+//    @Test
+//    void shouldShowBooksWithDiscount() {
+//        List<Book> happyHourBooks = bookService.applyDiscount( bookService.getAllBooks(), 0.9 );
+//        Book book = happyHourBooks.get( 0 );
+//        assertThat( book.getRrp() ).isEqualTo( 9.9 );
+//    }
 
     @Test
-    void shouldShowBooksWithDiscount() {
-        List<Book> happyHourBooks = bookService.applyDiscount( bookService.getAllBooks() );
-        Book book = happyHourBooks.get( 0 );
-        assertThat( book.getRrp() ).isEqualTo( 9.9 );
+    void shouldGetDiscounts() {
+        List<Book> allBooks = bookService.getAllBooks();
+        Book book = allBooks.get( 0 );
+        assertThat( bookService.getDiscountedPrice(book, 0.9) ).isEqualTo( 9.9 );
     }
 
     @Test
-    void shouldGetDiscountsBasedOnHappyHour() {
-        List<Book> allBooks = bookService.happyHourBooks();
+    void shouldGetHappyHourBooks() {
+        List<Book> allBooks = bookService.getAllBooks();
         Book book = allBooks.get( 0 );
-        assertThat( book.getRrp() ).isEqualTo( LocalDateTime.now().getHour() % 2 == 0 ? 9.9 : 11.0 );
+        Double discountedPrice = bookService.haveHappyHourSale().get( book );
+        System.out.println(discountedPrice);
+        assertThat( discountedPrice ).isEqualTo( LocalDateTime.now().getHour() % 2 != 0 ? 9.9 : 11 );
+    }
+
+    @Test
+    void shouldNotChangeOriginalPrice() {
+        List<Book> allBooks = bookService.getAllBooks();
+        Book book = allBooks.get( 0 );
+        Double discountedPrice = bookService.haveHappyHourSale().get( book );
+        assertThat( discountedPrice ).isEqualTo( LocalDateTime.now().getHour() % 2 != 0 ? 9.9 : 11 );
+        flushAndClear();
+        List<Book> books = bookService.getAllBooks();
+        assertThat( books.get( 0 ).getRrp() ).isEqualTo( 11.0 );
+    }
+
+    @Test
+    void shouldGetWeeklyWednesdayPrices() {
+        HashMap<Book, Double> saleBooks = bookService.haveWeeklyWednesdaySale();
+        Book b = bookService.searchTitle("Lord of the Ring").get( 0 );
+        assertThat( saleBooks.get( b ) ).isEqualTo( 11 );
     }
 }

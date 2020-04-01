@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -33,20 +34,33 @@ public class BookService {
         return books;
     }
 
-    public List<Book> applyDiscount(List<Book> books) {
-        double DISCOUNT = 0.9;
-        for (Book book : books) {
-            book.setRrp(book.getRrp() * DISCOUNT);
-        }
-        return books;
+    public Double getDiscountedPrice(Book book, double discount) {
+        return book.getRrp() * discount;
+    }
+
+    public HashMap<Book, Double> haveWeeklyWednesdaySale() {
+        double discount = 0.5;
+        double noDiscount = 1;
+        List<Book> books = getAllBooks();
+        return discountedBooks(books, isHappyHour() ? discount : noDiscount );
+    }
+
+    public HashMap<Book, Double> haveHappyHourSale() {
+        double discount = 0.9;
+        double noDiscount = 1;
+        List<Book> books = getAllBooks();
+        return discountedBooks(books, isHappyHour() ? discount : noDiscount );
     }
 
     private boolean isHappyHour() {
-        return LocalDateTime.now().getHour() % 2 == 0 ? true : false;
+        return LocalDateTime.now().getHour() % 2 != 0;
     }
 
-    public List<Book> happyHourBooks() {
-        List<Book> books = getAllBooks();
-        return isHappyHour() ? applyDiscount(books) : books;
+    private HashMap<Book, Double> discountedBooks(List<Book> books, double discount) {
+        HashMap<Book, Double> discountedBooks = new HashMap<>(books.size());
+        for (Book book : books) {
+            discountedBooks.put(book, getDiscountedPrice(book, discount));
+        }
+        return discountedBooks;
     }
 }
